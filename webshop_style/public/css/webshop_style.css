@@ -1,0 +1,8 @@
+/* 🔥 Kill cart indicator everywhere */
+.cart-indicator,
+.list-indicator,
+.go-to-cart {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
