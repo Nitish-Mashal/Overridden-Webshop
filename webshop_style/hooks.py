@@ -6,13 +6,14 @@ app_email = "nitish.m@quantumberg.com"
 app_license = "mit"
 
 web_include_js = [
-    "/assets/webshop_style/js/product_list_override.js"
+    "/assets/webshop_style/js/product_override.js",
+    "/assets/webshop_style/js/product_list_override.js",
+    "/assets/webshop_style/js/cart_override.js"   # ✅ ADD THIS
 ]
 
 web_include_css = [
     "/assets/webshop_style/css/webshop_style.css"
 ]
-
 
 # Apps
 # ------------------

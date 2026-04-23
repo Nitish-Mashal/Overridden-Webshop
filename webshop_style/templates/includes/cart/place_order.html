@@ -1,0 +1,13 @@
+<div class="card h-100">
+	<div class="card-body p-0">
+		{% if cart_settings.enable_checkout %}
+			<button class="btn btn-primary font-md w-100 btn-place-order" type="button">
+				{{ _("Place Order") }}
+			</button>
+		{% else %}
+			<button class="btn btn-primary font-md w-100 btn-request-quote" type="button">
+				{{ _("Request for Quote") }}
+			</button>
+		{% endif %}
+	</div>
+</div>

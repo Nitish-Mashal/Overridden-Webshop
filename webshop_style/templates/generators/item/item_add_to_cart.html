@@ -1,4 +1,5 @@
 <!-- webshop_style/templates/generators/item/item_add_to_cart.html -->
+
 {% if shopping_cart and shopping_cart.cart_settings.enabled %}
 
 {% set cart_settings = shopping_cart.cart_settings %}
@@ -7,30 +8,35 @@
 <div class="item-cart row mt-2" data-variant-item-code="{{ item_code }}">
 	<div class="col-md-12">
 
-		<!-- Price and Availability -->
+		<!-- Price -->
 		{% if cart_settings.show_price and product_info.price %}
 			{% set price_info = product_info.price %}
-			<div class="product-price" itemprop="offers" itemscope itemtype="https://schema.org/AggregateOffer">
+			<div class="product-price"
+				itemprop="offers"
+				itemscope
+				itemtype="https://schema.org/AggregateOffer">
 				<span>{{ price_info.formatted_price_sales_uom }}</span>
 			</div>
 		{% endif %}
 
-		<!-- Add to Cart / View in Cart -->
+		<!-- Add to Cart Section -->
 		<div class="mt-6 mb-5">
 			<div class="mb-4 d-flex">
 
 				{% if product_info.price and (cart_settings.allow_items_not_in_stock or product_info.get("in_stock")) %}
 
+					<!-- View in Cart -->
 					<a href="/cart"
 						class="btn btn-light btn-view-in-cart hidden mr-2 font-md"
 						role="button">
 						{{ _("View in Cart") if cart_settings.enable_checkout else _("View in Quote") }}
 					</a>
 
-					<!-- ✅ OVERRIDDEN BUTTON (w-30-40 REMOVED) -->
+					<!-- Add to Cart -->
 					<button
 						data-item-code="{{ item_code }}"
 						class="btn btn-primary btn-add-to-cart mr-2"
+						type="button"
 					>
 						<span class="mr-2">
 							<svg class="icon icon-md">
@@ -42,9 +48,11 @@
 
 				{% endif %}
 
+				<!-- Contact Us -->
 				{% if cart_settings.show_contact_us_button %}
 					{% include "templates/generators/item/item_inquiry.html" %}
 				{% endif %}
+
 			</div>
 		</div>
 

@@ -147,7 +147,15 @@
 {% endblock %}
 
 {% block base_scripts %}
+
+<!-- ✅ Required Core -->
 {{ include_script("frappe-web.bundle.js") }}
+
+<!-- ✅ Needed for dialogs, uploads, etc -->
 {{ include_script("controls.bundle.js") }}
 {{ include_script("dialog.bundle.js") }}
+
+<!-- ✅ Your custom -->
+<script src="/assets/webshop_style/js/cart_override.js"></script>
+
 {% endblock %}

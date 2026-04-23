@@ -1,0 +1,69 @@
+{% from "webshop/templates/includes/macros.html" import product_image %}
+
+{% for item in doc.items %}
+
+<tr class="cart-item" data-item-code="{{ item.item_code }}">
+    
+    <!-- ITEM -->
+    <td>
+        <div class="d-flex align-items-center">
+
+            <!-- ✅ IMAGE -->
+            <div class="me-3">
+                {% if item.thumbnail %}
+                    {{ product_image(item.thumbnail, alt=item.item_name, no_border=True) }}
+                {% else %}
+                    <img 
+                        src="/assets/frappe/images/default-image.png"
+                        style="width:60px;height:60px;object-fit:cover;border-radius:6px;"
+                    >
+                {% endif %}
+            </div>
+
+            <!-- ✅ DETAILS -->
+            <div>
+                <div><strong>{{ item.item_name }}</strong></div>
+                <small class="text-muted">{{ item.item_code }}</small>
+            </div>
+
+        </div>
+    </td>
+
+    <!-- QUANTITY -->
+    <td class="text-center">
+        <div class="d-flex justify-content-center align-items-center">
+
+            <!-- ➖ -->
+            <button type="button"
+                    class="btn btn-sm btn-decrease-qty"
+                    onclick="return false;">
+                -
+            </button>
+
+            <!-- QTY -->
+            <input type="text"
+                   class="form-control item-qty mx-2 text-center"
+                   value="{{ item.qty }}"
+                   readonly
+                   style="width: 60px; pointer-events: none;">
+
+            <!-- ➕ -->
+            <button type="button"
+                    class="btn btn-sm btn-increase-qty"
+                    onclick="return false;">
+                +
+            </button>
+
+        </div>
+    </td>
+
+    <!-- SUBTOTAL -->
+    {% if cart_settings.enable_checkout or cart_settings.show_price_in_quotation %}
+    <td class="text-right">
+        <strong>{{ item.get_formatted("amount") }}</strong>
+    </td>
+    {% endif %}
+
+</tr>
+
+{% endfor %}
