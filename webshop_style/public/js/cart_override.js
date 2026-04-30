@@ -3,6 +3,10 @@ if (!window.cartOverrideInitialized) {
 
     window.cartOverrideInitialized = true;
 
+    // 🆕 GLOBAL PRESCRIPTION STATE
+    let uploaded_prescription = null;
+    let prescription_required = false;
+
     // ============================================
     // 🚫 BLOCK WEBSHOP DEFAULT HANDLERS (SAFE)
     // ============================================
@@ -16,11 +20,11 @@ if (!window.cartOverrideInitialized) {
         if (isCartButton) {
             console.log("🛑 Blocking default webshop handler (safe)");
 
-            // ✅ Only stop bubbling (DO NOT kill all handlers)
+            // ✅ Only stop bubbling
             e.stopPropagation();
         }
 
-    }, false); // 👈 IMPORTANT: bubble phase (NOT capture)
+    }, false);
 
 
     frappe.ready(function () {
@@ -28,6 +32,43 @@ if (!window.cartOverrideInitialized) {
         console.log("✅ cart_override.js loaded (FINAL WORKING)");
 
         let isUpdating = false;
+
+        // 🆕 DETECT PRESCRIPTION REQUIREMENT FROM DOM
+        if ($("#prescription-upload").length) {
+            prescription_required = true;
+            console.log("💊 Prescription required for this cart");
+        }
+
+        // 🆕 HANDLE FILE UPLOAD
+        $(document).on("change", "#prescription-upload", function () {
+
+            let file = this.files[0];
+            if (!file) return;
+
+            let form_data = new FormData();
+            form_data.append("file", file);
+
+            fetch("/api/method/upload_file", {
+                method: "POST",
+                body: form_data,
+                headers: {
+                    "X-Frappe-CSRF-Token": frappe.csrf_token
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.message) {
+                    uploaded_prescription = data.message.file_url;
+
+                    console.log("✅ Prescription uploaded:", uploaded_prescription);
+
+                    $("#prescription-status").show();
+                }
+            })
+            .catch(() => {
+                frappe.msgprint("❌ Prescription upload failed");
+            });
+        });
 
         // ============================================
         // ✅ UPDATE CART (SAFE + LOCK)
@@ -63,7 +104,6 @@ if (!window.cartOverrideInitialized) {
                     if (r.message) {
                         console.log("✅ Cart updated");
 
-                        // 🔄 Reload safely
                         setTimeout(() => {
                             location.reload();
                         }, 100);
@@ -82,7 +122,7 @@ if (!window.cartOverrideInitialized) {
         $(document).on("click", ".btn-increase-qty", function (e) {
 
             e.preventDefault();
-            e.stopImmediatePropagation(); // ✅ safe here
+            e.stopImmediatePropagation();
 
             if (isUpdating) return false;
 
@@ -98,6 +138,7 @@ if (!window.cartOverrideInitialized) {
 
         // ============================================
         // ➖ DECREASE QTY
+        // ✅ If qty = 1 remove item from cart
         // ============================================
         $(document).on("click", ".btn-decrease-qty", function (e) {
 
@@ -113,18 +154,30 @@ if (!window.cartOverrideInitialized) {
 
             if (qty > 1) {
                 update_cart(item_code, qty - 1);
+            } else if (qty === 1) {
+                update_cart(item_code, 0);   // ✅ remove item
             }
 
             return false;
         });
 
         // ============================================
-        // ✅ PLACE ORDER
+        // ✅ PLACE ORDER (UPDATED WITH PRESCRIPTION)
         // ============================================
         $(document).on("click", ".btn-place-order", function (e) {
 
             e.preventDefault();
             e.stopImmediatePropagation();
+
+            // 🆕 BLOCK IF PRESCRIPTION REQUIRED BUT NOT UPLOADED
+            if (prescription_required && !uploaded_prescription) {
+                frappe.msgprint({
+                    title: "Prescription Required",
+                    message: "Please upload a prescription before placing the order.",
+                    indicator: "red"
+                });
+                return false;
+            }
 
             if (isUpdating) return false;
 
@@ -143,8 +196,19 @@ if (!window.cartOverrideInitialized) {
                     if (r.message) {
                         console.log("✅ Order Created:", r.message);
 
-                        // 🔁 Redirect to order page
+                        // 🆕 ATTACH PRESCRIPTION AFTER ORDER CREATION
+                        if (uploaded_prescription) {
+                            frappe.call({
+                                method: "webshop_style.api.attach_prescription",
+                                args: {
+                                    sales_order: r.message,
+                                    file_url: uploaded_prescription
+                                }
+                            });
+                        }
+
                         window.location.href = "/orders/" + r.message;
+
                     } else {
                         frappe.msgprint("❌ Order failed");
                     }

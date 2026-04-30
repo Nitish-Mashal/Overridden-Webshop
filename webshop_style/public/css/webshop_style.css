@@ -6,3 +6,92 @@
     visibility: hidden !important;
     opacity: 0 !important;
 }
+
+
+/* =====================================================
+   Custom App: webshop_style
+   File: webshop_style/public/css/webshop_style.css
+   Purpose: Keep col-9 on desktop, use col-12 on mobile
+   ===================================================== */
+
+/* ==========================================
+   Mobile Pagination Layout Fix
+   Prev = Left | Next = Right
+   ========================================== */
+
+@media (max-width: 767.98px) {
+
+    .product-paging-area {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 0 !important;
+        padding: 0 12px;
+    }
+
+    .product-paging-area .col-3 {
+        display: none !important;
+    }
+
+    .product-paging-area .col-9.text-right {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        text-align: unset !important;
+        padding: 0;
+    }
+
+    .product-paging-area .btn-prev {
+        margin-right: auto;
+    }
+
+    .product-paging-area .btn-next {
+        margin-left: auto;
+    }
+}
+
+
+/* =========================================
+   SHOW FILTERS ON MOBILE - WEBSHOP OVERRIDE
+========================================= */
+
+/* @media (max-width: 767px) {
+    #product-filters,
+    .filters-section,
+    #product-filters.collapse,
+    #product-filters:not(.show) {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+    }
+
+    .filters-section {
+        margin-bottom: 20px !important;
+        padding: 14px !important;
+        background: #fff;
+        border-radius: 12px;
+    }
+
+    .filters-title {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .clear-filters {
+        font-size: 14px;
+    }
+
+    .filters-section {
+        order: 1;
+    }
+
+    #product-listing {
+        order: 2;
+    }
+} */
+
