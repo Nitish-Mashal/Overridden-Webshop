@@ -19,36 +19,53 @@
 			</div>
 		{% endif %}
 
-		<!-- Add to Cart Section -->
-		<div class="mt-6 mb-5">
-			<div class="mb-4 d-flex">
+		<div class="mt-4 mb-4">
+			<div class="d-flex">
 
 				{% if product_info.price and (cart_settings.allow_items_not_in_stock or product_info.get("in_stock")) %}
 
 					<!-- View in Cart -->
 					<a href="/cart"
-						class="btn btn-light btn-view-in-cart hidden mr-2 font-md"
-						role="button">
-						{{ _("View in Cart") if cart_settings.enable_checkout else _("View in Quote") }}
+					   class="btn btn-light btn-view-in-cart hidden mr-2">
+						{{ _("View in Cart") }}
 					</a>
 
-					<!-- Add to Cart -->
-					<button
-						data-item-code="{{ item_code }}"
-						class="btn btn-primary btn-add-to-cart mr-2"
-						type="button"
-					>
-						<span class="mr-2">
-							<svg class="icon icon-md">
-								<use href="#icon-assets"></use>
-							</svg>
-						</span>
-						{{ _("Add to Cart") if cart_settings.enable_checkout else _("Add to Quote") }}
-					</button>
+					{% if frappe.session.user != "Guest" %}
+
+						<!-- Logged User -->
+						<button
+							data-item-code="{{ item_code }}"
+							class="btn btn-primary btn-add-to-cart mr-2"
+							type="button">
+
+							<span class="mr-2">
+								<svg class="icon icon-md">
+									<use href="#icon-assets"></use>
+								</svg>
+							</span>
+
+							{{ _("Add to Cart") }}
+						</button>
+
+					{% else %}
+
+						<!-- Guest User -->
+						<a href="/login?redirect-to={{ frappe.request.path }}"
+						   class="btn btn-primary mr-2">
+
+							<span class="mr-2">
+								<svg class="icon icon-md">
+									<use href="#icon-assets"></use>
+								</svg>
+							</span>
+
+							{{ _("Add to Cart") }}
+						</a>
+
+					{% endif %}
 
 				{% endif %}
 
-				<!-- Contact Us -->
 				{% if cart_settings.show_contact_us_button %}
 					{% include "templates/generators/item/item_inquiry.html" %}
 				{% endif %}
@@ -58,5 +75,45 @@
 
 	</div>
 </div>
+
+<script>
+frappe.ready(() => {
+
+	$('.page_content').on('click', '.btn-add-to-cart', function(e){
+
+		e.preventDefault();
+
+		const $btn = $(this);
+		const item_code = $btn.data('item-code');
+
+		if (!item_code) return;
+
+		$btn.prop('disabled', true);
+
+		if (window.webshop && webshop.webshop && webshop.webshop.shopping_cart) {
+
+			webshop.webshop.shopping_cart.update_cart({
+				item_code: item_code,
+				qty: 1,
+
+				callback: function(r){
+
+					$btn.prop('disabled', false);
+
+					if (r.message) {
+						$('.btn-add-to-cart').addClass('hidden');
+						$('.btn-view-in-cart').removeClass('hidden');
+					}
+				}
+			});
+
+		} else {
+			$btn.prop('disabled', false);
+		}
+
+	});
+
+});
+</script>
 
 {% endif %}
