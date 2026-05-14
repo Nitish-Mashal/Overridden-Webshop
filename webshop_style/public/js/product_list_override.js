@@ -31,7 +31,7 @@
 
             // Cart
             frappe.call({
-                method: "q_dynamics_ecommerce.api.cart.get_cart_count",
+                method: "webshop_style.api.cart.get_cart_count",
                 callback: r => {
                     const badge = document.getElementById("cartBadgeTop");
                     if (badge) badge.innerText = r.message || 0;
@@ -40,7 +40,7 @@
 
             // Wishlist
             frappe.call({
-                method: "q_dynamics_ecommerce.api.cart.get_wishlist_count",
+                method: "webshop_style.api.cart.get_wishlist_count",
                 callback: r => {
                     const badge = document.getElementById("wishlistBadgeTop");
                     if (badge) badge.innerText = r.message || 0;
