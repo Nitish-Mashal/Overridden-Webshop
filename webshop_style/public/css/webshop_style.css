@@ -19,7 +19,7 @@
    Prev = Left | Next = Right
    ========================================== */
 
-@media (max-width: 767.98px) {
+/* @media (max-width: 767.98px) {
 
     .product-paging-area {
         display: flex !important;
@@ -52,7 +52,7 @@
     .product-paging-area .btn-next {
         margin-left: auto;
     }
-}
+} */
 
 
 /* =========================================
