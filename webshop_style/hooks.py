@@ -8,11 +8,14 @@ app_license = "mit"
 web_include_js = [
     "/assets/webshop_style/js/product_override.js",
     "/assets/webshop_style/js/product_list_override.js",
-    "/assets/webshop_style/js/cart_override.js"   # ✅ ADD THIS
+    "/assets/webshop_style/js/cart_override.js",
+       "/assets/webshop_style/js/contact_style.js",
+           "/assets/webshop_style/js/cart_style.js"
+
 ]
 
 web_include_css = [
-    "/assets/webshop_style/css/webshop_style.css"
+    "/assets/webshop_style/css/webshop_style.css",
 ]
 
 # Apps
