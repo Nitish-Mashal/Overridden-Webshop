@@ -1,32 +1,30 @@
 (function () {
     "use strict";
 
-    // Run only on Cart page
+    // Only Cart page
     if (window.location.pathname !== "/cart") {
         return;
     }
 
-    function applyCartContainerStyle() {
-        const styleId = "vishuddhi-cart-container-style";
-
-        let style = document.getElementById(styleId);
+    function applyCartStyle() {
+        let style = document.getElementById("vishuddhi-cart-style");
 
         if (!style) {
             style = document.createElement("style");
-            style.id = styleId;
+            style.id = "vishuddhi-cart-style";
             document.head.appendChild(style);
         }
 
         style.textContent = `
             @media (max-width: 992px) {
 
-                /* Cart page: remove the extra 1.5rem padding */
+                /* Remove the 1.5rem padding from the page wrapper */
                 .page-content-wrapper .container {
-                    padding-left: 0px !important;
-                    padding-right: 0px !important;
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
                 }
 
-                /* Cart page: keep container padding at 5px */
+                /* Keep the actual container at 5px */
                 .container,
                 .container-fluid,
                 .container-xl,
@@ -39,18 +37,14 @@
                     margin-left: auto !important;
                     margin-right: auto !important;
                 }
-
             }
         `;
     }
 
     if (document.readyState === "loading") {
-        document.addEventListener(
-            "DOMContentLoaded",
-            applyCartContainerStyle
-        );
+        document.addEventListener("DOMContentLoaded", applyCartStyle);
     } else {
-        applyCartContainerStyle();
+        applyCartStyle();
     }
 
 })();
