@@ -2,26 +2,25 @@
     "use strict";
 
     function removeNetTotalRow() {
-        document.querySelectorAll("#page-cart .cart-table tfoot tr").forEach(function (row) {
+        const rows = document.querySelectorAll(
+            "#page-cart .cart-table tfoot.cart-tax-items tr"
+        );
 
-            const text = row.textContent.trim();
-
-            if (text.includes("Net Total")) {
-                row.remove();
-            }
-
+        rows.forEach(function (row) {
+            row.remove();
         });
     }
 
-    // Initial run
+    // Remove immediately
     removeNetTotalRow();
 
-    // Frappe may render the cart dynamically
-    setTimeout(removeNetTotalRow, 300);
+    // Frappe may recreate the row
+    setTimeout(removeNetTotalRow, 100);
+    setTimeout(removeNetTotalRow, 500);
     setTimeout(removeNetTotalRow, 1000);
     setTimeout(removeNetTotalRow, 2000);
 
-    // Watch for cart re-rendering
+    // Detect Frappe cart updates/re-rendering
     const observer = new MutationObserver(function () {
         removeNetTotalRow();
     });
@@ -30,5 +29,4 @@
         childList: true,
         subtree: true
     });
-
 })();
