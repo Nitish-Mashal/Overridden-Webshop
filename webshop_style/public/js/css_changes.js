@@ -2,6 +2,10 @@
 (function () {
     "use strict";
 
+    /* =========================================================
+       ADD MOBILE RESPONSIVE CSS
+       ========================================================= */
+
     function addMobilePaginationCSS() {
 
         if (document.getElementById("vishuddhi-mobile-pagination-css")) {
@@ -9,7 +13,6 @@
         }
 
         const style = document.createElement("style");
-
         style.id = "vishuddhi-mobile-pagination-css";
 
         style.textContent = `
@@ -18,25 +21,59 @@
                CART WIDTH - MOBILE + TABLET
                ================================================= */
 
-         @media (max-width: 992px) {
+            @media (max-width: 992px) {
 
-        button.btn-add-to-cart.w-30-40 {
-            width: 50% !important;
-            min-width: 50% !important;
-            max-width: 50% !important;
-            flex: 0 0 50% !important;
-            flex-basis: 50% !important;
-        }
+                button.btn-add-to-cart.w-30-40,
+                .btn-add-to-cart.w-30-40 {
+                    width: 50% !important;
+                    min-width: 50% !important;
+                    max-width: 50% !important;
+                    flex: 0 0 50% !important;
+                    flex-basis: 50% !important;
+                }
 
-        .btn-add-to-cart.w-30-40 {
-            width: 50% !important;
-            min-width: 50% !important;
-            max-width: 50% !important;
-            flex: 0 0 50% !important;
-            flex-basis: 50% !important;
-        }
+            }
 
-    }
+
+            /* =================================================
+               CART PAGE - MOBILE ACTIVE ADDRESS CARD
+               ================================================= */
+
+            @media (max-width: 767px) {
+
+                #page-cart .address-card.active {
+                    border-color: var(--primary) !important;
+                    margin-bottom: 50px !important;
+                }
+
+            }
+                 #page-cart .checkbox {
+                  margin-bottom: 80px !important;
+               }
+
+
+            /* =================================================
+               SALES ORDER PAGE - MOBILE RESPONSIVE
+               Route: /orders/SAL-ORD-2026-00010
+               ================================================= */
+
+            @media (max-width: 767px) {
+
+                body.vishuddhi-sales-order-page .indicator-container {
+                    padding-bottom: 0.8rem !important;
+                    max-width: 67% !important;
+                    box-sizing: border-box !important;
+                }
+                    .breadcrumb-container {
+                      margin-top: 3rem !important;
+                      padding-top: 0.25rem;
+                  }
+
+                  #pay-for-order {
+                    padding: 0.5rem 1rem;
+                    display: none;
+                  }
+            }
 
 
             /* =================================================
@@ -241,6 +278,10 @@
                 }
 
 
+                /* =============================================
+                   EXTRA SMALL MOBILE SCREENS
+                   ============================================= */
+
                 @media (max-width: 400px) {
 
                     #page-all-products .product-paging-area {
@@ -257,13 +298,118 @@
                         padding-left: 9px !important;
                         padding-right: 9px !important;
                     }
+
                 }
+
             }
+
         `;
 
         document.head.appendChild(style);
     }
 
+
+    /* =========================================================
+       SALES ORDER PAGE - APPLY MOBILE CLASS
+       Works for /orders/<order-name>
+       ========================================================= */
+
+function fixSalesOrderMobileCSS() {
+
+    const isSalesOrderPage =
+        window.location.pathname.startsWith("/orders/");
+
+    document.body.classList.toggle(
+        "vishuddhi-sales-order-page",
+        isSalesOrderPage
+    );
+
+    /* =========================================================
+       SALES ORDER - PAY FOR ORDER
+       HIDE ON DESKTOP + MOBILE
+       ========================================================= */
+
+    if (isSalesOrderPage) {
+
+        document.querySelectorAll("#pay-for-order").forEach(
+            function (element) {
+
+                element.style.setProperty(
+                    "padding",
+                    "0.5rem 1rem",
+                    "important"
+                );
+
+                element.style.setProperty(
+                    "display",
+                    "none",
+                    "important"
+                );
+
+            }
+        );
+
+    }
+
+    /* =========================================================
+       MOBILE ONLY - SALES ORDER RESPONSIVE CSS
+       ========================================================= */
+
+    if (window.innerWidth > 767 || !isSalesOrderPage) {
+        return;
+    }
+
+    /* INDICATOR CONTAINER */
+
+    document.querySelectorAll(".indicator-container").forEach(
+        function (element) {
+
+            element.style.setProperty(
+                "padding-bottom",
+                "0.8rem",
+                "important"
+            );
+
+            element.style.setProperty(
+                "max-width",
+                "67%",
+                "important"
+            );
+
+            element.style.setProperty(
+                "box-sizing",
+                "border-box",
+                "important"
+            );
+
+        }
+    );
+
+    /* BREADCRUMB CONTAINER */
+
+    document.querySelectorAll(".breadcrumb-container").forEach(
+        function (element) {
+
+            element.style.setProperty(
+                "margin-top",
+                "3rem",
+                "important"
+            );
+
+            element.style.setProperty(
+                "padding-top",
+                "0.25rem",
+                "important"
+            );
+
+        }
+    );
+
+}
+
+    /* =========================================================
+       FIX PRODUCT PAGINATION
+       ========================================================= */
 
     function fixProductPagination() {
 
@@ -402,9 +548,14 @@
                 lastColumn.style.paddingLeft = "5px";
                 lastColumn.style.paddingRight = "5px";
             }
+
         });
     }
 
+
+    /* =========================================================
+       SCHEDULE RESPONSIVE FIXES
+       ========================================================= */
 
     let fixTimer = null;
 
@@ -415,10 +566,15 @@
         fixTimer = setTimeout(function () {
 
             fixProductPagination();
+            fixSalesOrderMobileCSS();
 
         }, 100);
     }
 
+
+    /* =========================================================
+       INITIALIZE CSS CHANGES
+       ========================================================= */
 
     function initializeCSSChanges() {
 
@@ -456,6 +612,10 @@
     }
 
 
+    /* =========================================================
+       WINDOW RESIZE
+       ========================================================= */
+
     let resizeTimer = null;
 
     window.addEventListener("resize", function () {
@@ -467,8 +627,13 @@
             schedulePaginationFix();
 
         }, 150);
+
     });
 
+
+    /* =========================================================
+       WATCH FOR DYNAMIC PAGE CONTENT
+       ========================================================= */
 
     let observerTimer = null;
 
@@ -479,15 +644,17 @@
         observerTimer = setTimeout(function () {
 
             if (
-                document.querySelector(
-                    ".product-paging-area"
-                )
+                document.querySelector(".product-paging-area")
             ) {
 
                 fixProductPagination();
+
             }
 
+            fixSalesOrderMobileCSS();
+
         }, 150);
+
     });
 
 
@@ -498,11 +665,11 @@
         }
 
         observer.observe(document.body, {
-
             childList: true,
-
             subtree: true
         });
+
+        fixSalesOrderMobileCSS();
     }
 
 
@@ -516,8 +683,13 @@
             "DOMContentLoaded",
             startObserver
         );
+
     }
 
+
+    /* =========================================================
+       FRAPPE PAGE CHANGE EVENT
+       ========================================================= */
 
     document.addEventListener(
         "page-change",
@@ -528,8 +700,8 @@
                 schedulePaginationFix();
 
             }, 300);
+
         }
     );
 
 })();
-
